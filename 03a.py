@@ -26,27 +26,15 @@ def main():
 def get_where_been(path):
     where_been = set()
     x = y = 0
+    dxs = dict(zip("UDRL", [0, 0, 1, -1]))
+    dys = dict(zip("UDRL", [-1, 1, 0, 0]))
     for movement in path:
         direction = movement[0]
         distance = int(movement[1:])
-        if direction == "U":
-            for i in range(1, distance + 1):
-                y -= 1
-                where_been.add((x, y))
-        elif direction == "D":
-            for i in range(1, distance + 1):
-                y += 1
-                where_been.add((x, y))
-        elif direction == "R":
-            for i in range(1, distance + 1):
-                x += 1
-                where_been.add((x, y))
-        elif direction == "L":
-            for i in range(1, distance + 1):
-                x -= 1
-                where_been.add((x, y))
-        else:
-            raise ValueError(f"Cannot process {movement}")
+        for _ in range(1, distance + 1):
+            x += dxs[direction]
+            y += dys[direction]
+            where_been.add((x, y))
     return where_been
 
 
@@ -54,9 +42,9 @@ def get_paths(filename):
     path1 = []
     path2 = []
     with open(filename) as f:
-        for value in f.readline().strip().split(","):
+        for value in f.readline().split(","):
             path1.append(value)
-        for value in f.readline().strip().split(","):
+        for value in f.readline().split(","):
             path2.append(value)
     return path1, path2
 
