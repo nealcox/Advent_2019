@@ -91,9 +91,13 @@ def run_program(memory, inputs):
         elif opcode == jump_if_true:
             if arg1 != 0:
                 pointer = arg2
+            else:
+                pointer += 3
         elif opcode == jump_if_false:
             if arg1 == 0:
                 pointer = arg2
+            else:
+                pointer += 3
         elif opcode == less_than:
             if arg1 < arg2:
                 memory[memory[pointer + 3]] = 1
@@ -112,6 +116,7 @@ def run_program(memory, inputs):
             raise ValueError(
                 f"Unrecognised opcode {memory[pointer]} at position {pointer}.\n Program:\n{memory}"
             )
+        print(f"instruction pointer: {pointer}")
 
     return diagnotsic_code
 
