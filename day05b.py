@@ -91,13 +91,13 @@ def run_program(memory, inputs):
         elif opcode == jump_if_true:
             if arg1 != 0:
                 pointer = arg2
-            else:
-                pointer += 3
+        #     else:
+        #         pointer += 3
         elif opcode == jump_if_false:
             if arg1 == 0:
                 pointer = arg2
-            else:
-                pointer += 3
+        #     else:
+        #         pointer += 3
         elif opcode == less_than:
             if arg1 < arg2:
                 memory[memory[pointer + 3]] = 1
