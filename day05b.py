@@ -9,12 +9,13 @@ def main():
         input_file = "05-input.txt"
     memory = load_memory(input_file)
 
-    inputs = [1]
+    inputs = [5]
 
-    memory = run_program(memory, inputs)
+    print(run_program(memory, inputs))
 
 
 def run_program(memory, inputs):
+    diagnotsic_code = None
     position_mode = 0
     immediate_mode = 1
 
@@ -22,10 +23,24 @@ def run_program(memory, inputs):
     mult = 2
     read = 3
     out = 4
+    jump_if_true = 5
+    jump_if_false = 6
+    less_than = 7
+    equals = 8
     halt = 99
 
     # modal args only
-    args_per_opcode = {add: 2, mult: 2, read: 0, out: 1, halt: 0}
+    args_per_opcode = {
+        add: 2,
+        mult: 2,
+        read: 0,
+        out: 1,
+        halt: 0,
+        jump_if_true: 2,
+        jump_if_false: 2,
+        less_than: 2,
+        equals: 2,
+    }
 
     pointer = 0
     finished = False
@@ -70,8 +85,27 @@ def run_program(memory, inputs):
             inputs = inputs[1:]
             pointer += 2
         elif opcode == out:
+            diagnotsic_code = arg1
             print(arg1)
             pointer += 2
+        elif opcode == jump_if_true:
+            if arg1 != 0:
+                pointer = arg2
+        elif opcode == jump_if_false:
+            if arg1 == 0:
+                pointer = arg2
+        elif opcode == less_than:
+            if arg1 < arg2:
+                memory[memory[pointer + 3]] = 1
+            else:
+                memory[memory[pointer + 3]] = 0
+            pointer += 4
+        elif opcode == equals:
+            if arg1 == arg2:
+                memory[memory[pointer + 3]] = 1
+            else:
+                memory[memory[pointer + 3]] = 0
+            pointer += 4
         elif opcode == halt:
             finished = True
         else:
@@ -79,7 +113,7 @@ def run_program(memory, inputs):
                 f"Unrecognised opcode {memory[pointer]} at position {pointer}.\n Program:\n{memory}"
             )
 
-    return memory
+    return diagnotsic_code
 
 
 def load_memory(filename):
