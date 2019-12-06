@@ -1,11 +1,12 @@
 import sys
 
-class IntcodeMachine():
-    def __init__(self,memory=None):
+
+class IntcodeMachine:
+    def __init__(self, memory=None):
         self.memory = memory
         self.memory_ = memory
 
-    def load_memory(self,filename):
+    def load_memory(self, filename):
         memory = []
         with open(filename) as f:
             for value in f.read().strip().split(","):
@@ -16,8 +17,20 @@ class IntcodeMachine():
     def reload(self):
         self.memory = self.memory_[:]
 
-    def run_program(self,inputs = None):
-        memory = self.memory[:]
+    def get_arg(self, instruction, pc, n):
+        position_mode = 0
+        immediate_mode = 1
+
+        mode = instruction // (10 ** (n + 1)) % 10
+        if mode == position_mode:
+            arg = self.memory[self.memory[pc + n]]
+        elif mode == immediate_mode:
+            arg = self.memory[pc + n]
+        else:
+            raise ValueError(f"Invalid mode for arg 1 in {instruction}")
+        return arg
+
+    def run_program(self, inputs=None):
         diagnotsic_code = None
         position_mode = 0
         immediate_mode = 1
@@ -32,99 +45,75 @@ class IntcodeMachine():
         equals = 8
         halt = 99
 
-        # modal args only
-        args_per_opcode = {
-            add: 2,
-            mult: 2,
-            read: 0,
-            out: 1,
-            halt: 0,
-            jump_if_true: 2,
-            jump_if_false: 2,
-            less_than: 2,
-            equals: 2,
-        }
-
         pointer = 0
         finished = False
 
         while not finished:
-            instruction = memory[pointer]
+            instruction = self.memory[pointer]
             opcode = instruction % 100
             mode1 = instruction // 100 % 10
             mode2 = instruction // 1000 % 10
             mode3 = instruction // 10000 % 10
 
-            if args_per_opcode[opcode] > 0:
-                if mode1 == position_mode:
-                    arg1 = memory[memory[pointer + 1]]
-                elif mode1 == immediate_mode:
-                    arg1 = memory[pointer + 1]
-                else:
-                    raise ValueError(f"Invalid mode for arg 1 in {instruction}")
-                if args_per_opcode[opcode] > 1:
-                    if mode2 == position_mode:
-                        arg2 = memory[memory[pointer + 2]]
-                    elif mode2 == immediate_mode:
-                        arg2 = memory[pointer + 2]
-                    else:
-                        raise ValueError(f"Invalid mode for arg 2 in {instruction}")
-                    if args_per_opcode[opcode] > 2:
-                        if mode3 == position_mode:
-                            arg3 = memory[memory[pointer + 3]]
-                        elif mode3 == immediate_mode:
-                            arg3 = memory[pointer + 3]
-                        else:
-                            raise ValueError(f"Invalid mode for arg 3 in {instruction}")
-
             if opcode == add:
-                memory[memory[pointer + 3]] = arg1 + arg2
+                arg1 = self.get_arg(instruction, pointer, 1)
+                arg2 = self.get_arg(instruction, pointer, 2)
+                self.memory[self.memory[pointer + 3]] = arg1 + arg2
                 pointer += 4
             elif opcode == mult:
-                memory[memory[pointer + 3]] = arg1 * arg2
+                arg1 = self.get_arg(instruction, pointer, 1)
+                arg2 = self.get_arg(instruction, pointer, 2)
+                self.memory[self.memory[pointer + 3]] = arg1 * arg2
                 pointer += 4
             elif opcode == read:
-                memory[memory[pointer + 1]] = inputs[0]
+                self.memory[self.memory[pointer + 1]] = inputs[0]
                 inputs = inputs[1:]
                 pointer += 2
             elif opcode == out:
+                arg1 = self.get_arg(instruction, pointer, 1)
                 diagnotsic_code = arg1
                 print(arg1)
                 pointer += 2
             elif opcode == jump_if_true:
+                arg1 = self.get_arg(instruction, pointer, 1)
+                arg2 = self.get_arg(instruction, pointer, 2)
                 if arg1 != 0:
                     pointer = arg2
                 else:
                     pointer += 3
             elif opcode == jump_if_false:
+                arg1 = self.get_arg(instruction, pointer, 1)
+                arg2 = self.get_arg(instruction, pointer, 2)
                 if arg1 == 0:
                     pointer = arg2
                 else:
                     pointer += 3
             elif opcode == less_than:
+                arg1 = self.get_arg(instruction, pointer, 1)
+                arg2 = self.get_arg(instruction, pointer, 2)
                 if arg1 < arg2:
-                    memory[memory[pointer + 3]] = 1
+                    self.memory[self.memory[pointer + 3]] = 1
                 else:
-                    memory[memory[pointer + 3]] = 0
+                    self.memory[self.memory[pointer + 3]] = 0
                 pointer += 4
             elif opcode == equals:
+                arg1 = self.get_arg(instruction, pointer, 1)
+                arg2 = self.get_arg(instruction, pointer, 2)
                 if arg1 == arg2:
-                    memory[memory[pointer + 3]] = 1
+                    self.memory[self.memory[pointer + 3]] = 1
                 else:
-                    memory[memory[pointer + 3]] = 0
+                    self.memory[self.memory[pointer + 3]] = 0
                 pointer += 4
             elif opcode == halt:
                 finished = True
             else:
                 raise ValueError(
-                    f"Unrecognised opcode {memory[pointer]} at position {pointer}.\n Program:\n{memory}"
+                    f"Unrecognised opcode {self.memory[pointer]} at position {pointer}.\n Program:\n{self.memory}"
                 )
             # print(f"instruction pointer: {pointer}")
 
         return diagnotsic_code
 
-
-        
 
 def main():
 
