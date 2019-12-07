@@ -5,6 +5,10 @@ class IntcodeMachine:
     def __init__(self, memory=None):
         self.memory = memory
         self.memory_ = memory
+        self.pc = 0
+        self.inputs = []
+        self.outputs = []
+        self.diagnotsic_code = None
 
     def load_memory(self, filename):
         memory = []
@@ -17,21 +21,36 @@ class IntcodeMachine:
     def reload(self):
         self.memory = self.memory_[:]
 
-    def get_arg(self, instruction, pc, n):
+    def get_arg(self, instruction, n):
         position_mode = 0
         immediate_mode = 1
 
         mode = instruction // (10 ** (n + 1)) % 10
         if mode == position_mode:
-            arg = self.memory[self.memory[pc + n]]
+            arg = self.memory[self.memory[self.pc + n]]
         elif mode == immediate_mode:
-            arg = self.memory[pc + n]
+            arg = self.memory[self.pc + n]
         else:
             raise ValueError(f"Invalid mode for arg 1 in {instruction}")
         return arg
 
     def run_program(self, inputs=None):
-        diagnotsic_code = None
+
+        if inputs:
+            self.inputs = inputs
+        old_result = result = "not started"
+        while self.memory[self.pc] != 99:
+            result = self.run()
+            if result == "Halted":
+                if self.outputs:
+                    self.diagnostic_code = self.outputs[-1]
+                return "Halted"
+            elif result == "Awaiting Input":
+                return "Awaiting Input"
+
+
+    def run(self):
+        diagnostic_code = None
         position_mode = 0
         immediate_mode = 1
 
@@ -44,73 +63,81 @@ class IntcodeMachine:
         less_than = 7
         equals = 8
         halt = 99
-
-        pointer = 0
         finished = False
 
-        while not finished:
-            instruction = self.memory[pointer]
+        while not finished and (self.memory[self.pc] % 100 != 99):
+            instruction = self.memory[self.pc]
             opcode = instruction % 100
 
             if opcode == add:
-                arg1 = self.get_arg(instruction, pointer, 1)
-                arg2 = self.get_arg(instruction, pointer, 2)
-                self.memory[self.memory[pointer + 3]] = arg1 + arg2
-                pointer += 4
+                arg1 = self.get_arg(instruction, 1)
+                arg2 = self.get_arg(instruction, 2)
+                self.memory[self.memory[self.pc + 3]] = arg1 + arg2
+                self.pc += 4
             elif opcode == mult:
-                arg1 = self.get_arg(instruction, pointer, 1)
-                arg2 = self.get_arg(instruction, pointer, 2)
-                self.memory[self.memory[pointer + 3]] = arg1 * arg2
-                pointer += 4
+                arg1 = self.get_arg(instruction, 1)
+                arg2 = self.get_arg(instruction, 2)
+                self.memory[self.memory[self.pc + 3]] = arg1 * arg2
+                self.pc += 4
             elif opcode == read:
-                self.memory[self.memory[pointer + 1]] = inputs[0]
-                inputs = inputs[1:]
-                
-                pointer += 2
+                if len(self.inputs) > 0:
+                    self.memory[self.memory[self.pc + 1]] = self.inputs[0]
+                    print(f"Read {self.inputs[0]}")
+                    del self.inputs[0]
+                    self.pc += 2
+                else:
+                    return "Awaiting Input"
             elif opcode == out:
-                arg1 = self.get_arg(instruction, pointer, 1)
+                arg1 = self.get_arg(instruction, 1)
                 diagnotsic_code = arg1
+                self.outputs.append(arg1)
                 print(arg1)
-                pointer += 2
+                self.pc += 2
             elif opcode == jump_if_true:
-                arg1 = self.get_arg(instruction, pointer, 1)
-                arg2 = self.get_arg(instruction, pointer, 2)
+                arg1 = self.get_arg(instruction, 1)
+                arg2 = self.get_arg(instruction, 2)
                 if arg1 != 0:
-                    pointer = arg2
+                    self.pc = arg2
                 else:
-                    pointer += 3
+                    self.pc += 3
             elif opcode == jump_if_false:
-                arg1 = self.get_arg(instruction, pointer, 1)
-                arg2 = self.get_arg(instruction, pointer, 2)
+                arg1 = self.get_arg(instruction, 1)
+                arg2 = self.get_arg(instruction, 2)
                 if arg1 == 0:
-                    pointer = arg2
+                    self.pc = arg2
                 else:
-                    pointer += 3
+                    self.pc += 3
             elif opcode == less_than:
-                arg1 = self.get_arg(instruction, pointer, 1)
-                arg2 = self.get_arg(instruction, pointer, 2)
+                arg1 = self.get_arg(instruction, 1)
+                arg2 = self.get_arg(instruction, 2)
                 if arg1 < arg2:
-                    self.memory[self.memory[pointer + 3]] = 1
+                    self.memory[self.memory[self.pc + 3]] = 1
                 else:
-                    self.memory[self.memory[pointer + 3]] = 0
-                pointer += 4
+                    self.memory[self.memory[self.pc + 3]] = 0
+                self.pc += 4
             elif opcode == equals:
-                arg1 = self.get_arg(instruction, pointer, 1)
-                arg2 = self.get_arg(instruction, pointer, 2)
+                arg1 = self.get_arg(instruction, 1)
+                arg2 = self.get_arg(instruction, 2)
                 if arg1 == arg2:
-                    self.memory[self.memory[pointer + 3]] = 1
+                    self.memory[self.memory[self.pc + 3]] = 1
                 else:
-                    self.memory[self.memory[pointer + 3]] = 0
-                pointer += 4
+                    self.memory[self.memory[self.pc + 3]] = 0
+                self.pc += 4
             elif opcode == halt:
                 finished = True
             else:
                 raise ValueError(
-                    f"Unrecognised opcode {self.memory[pointer]} at position {pointer}.\n Program:\n{self.memory}"
+                    f"Unrecognised opcode {self.memory[self.pc]} at position {self.pc}.\n Program:\n{self.memory}"
                 )
-            # print(f"instruction pointer: {pointer}")
+            # print(f"instruction counter: {self.pc}")
 
-        return diagnotsic_code
+        #return diagnotsic_code
+        return "Halted"
+
+
+
+
+
 
 
 def main():
