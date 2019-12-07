@@ -8,7 +8,8 @@ class IntcodeMachine:
         self.pc = 0
         self.inputs = []
         self.outputs = []
-        self.diagnotsic_code = None
+        self.state = "Not running"
+        self.diagnostic_code = None
 
     def load_memory(self, filename):
         memory = []
@@ -41,10 +42,11 @@ class IntcodeMachine:
         old_result = result = "not started"
         while self.memory[self.pc] != 99:
             result = self.run()
-            if result == "Halted":
+            if isinstance(result, int):
+                self.state = "Halted"
                 if self.outputs:
                     self.diagnostic_code = self.outputs[-1]
-                return "Halted"
+                return self.diagnostic_code
             elif result == "Awaiting Input":
                 return "Awaiting Input"
 
@@ -65,7 +67,7 @@ class IntcodeMachine:
         halt = 99
         finished = False
 
-        while not finished and (self.memory[self.pc] % 100 != 99):
+        while not finished:
             instruction = self.memory[self.pc]
             opcode = instruction % 100
 
@@ -82,14 +84,14 @@ class IntcodeMachine:
             elif opcode == read:
                 if len(self.inputs) > 0:
                     self.memory[self.memory[self.pc + 1]] = self.inputs[0]
-                    print(f"Read {self.inputs[0]}")
                     del self.inputs[0]
                     self.pc += 2
                 else:
+                    self.state =  "Awaiting Input"
                     return "Awaiting Input"
             elif opcode == out:
                 arg1 = self.get_arg(instruction, 1)
-                diagnotsic_code = arg1
+                self.diagnostic_code = arg1
                 self.outputs.append(arg1)
                 print(arg1)
                 self.pc += 2
@@ -125,14 +127,15 @@ class IntcodeMachine:
                 self.pc += 4
             elif opcode == halt:
                 finished = True
+                self.state = "Halted"
             else:
                 raise ValueError(
                     f"Unrecognised opcode {self.memory[self.pc]} at position {self.pc}.\n Program:\n{self.memory}"
                 )
             # print(f"instruction counter: {self.pc}")
 
-        #return diagnotsic_code
-        return "Halted"
+        #return diagnostic_code
+        return self.diagnostic_code
 
 
 

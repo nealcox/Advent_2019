@@ -41,10 +41,8 @@ def run_amplifiers(filename,p):
     while not finished:
         for i in range(5):
             machines[i].inputs = machines[(i - 1)%5].outputs
-            print(f"{i} inputs {machines[i].inputs} {(i-1)%5} outputs {machines[(i-1)%5].outputs}")
-            state = machines[i].run_program()
-            print(f"{p} machine {i} > {state}")
-            print(f"{i} memory: {machines[i].memory}")
+            result = machines[i].run_program()
+            state = machines[i].state
         if state == "Halted":
             finished = True
     return machines[4].diagnostic_code
