@@ -51,9 +51,6 @@ class IntcodeMachine:
         while not finished:
             instruction = self.memory[pointer]
             opcode = instruction % 100
-            mode1 = instruction // 100 % 10
-            mode2 = instruction // 1000 % 10
-            mode3 = instruction // 10000 % 10
 
             if opcode == add:
                 arg1 = self.get_arg(instruction, pointer, 1)
@@ -68,6 +65,7 @@ class IntcodeMachine:
             elif opcode == read:
                 self.memory[self.memory[pointer + 1]] = inputs[0]
                 inputs = inputs[1:]
+                
                 pointer += 2
             elif opcode == out:
                 arg1 = self.get_arg(instruction, pointer, 1)
