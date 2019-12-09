@@ -12,27 +12,27 @@ def main():
         height = int(sys.argv[3])
     else:
         input_file = "08-input.txt"
-    digits =  get_digits(input_file)
+    digits = get_digits(input_file)
 
     layer = 0
     across = 0
     down = 0
     num_per_layer = width * height
-    decoded  = []
+    decoded = []
 
     for i in range(len(digits)):
         if i % num_per_layer == 0:
             decoded.append([])
-#        if i % width == 0: 
-#            decoded[-1].append([])
-#        decoded[-1][-1].append(digits[i])
+        #        if i % width == 0:
+        #            decoded[-1].append([])
+        #        decoded[-1][-1].append(digits[i])
         decoded[-1].append(digits[i])
 
     layer_min_0s = 0
     min_0s = float("inf")
-    for i,l in enumerate(decoded):
+    for i, l in enumerate(decoded):
         c = Counter(l)
-        num_0s = c['0']
+        num_0s = c["0"]
         if num_0s < min_0s:
             min_0s = num_0s
             layer_min_0s = i
@@ -42,17 +42,15 @@ def main():
     for i in range(num_per_layer):
         for layer in range(len(decoded)):
             pixel = decoded[layer][i]
-            if pixel == '0':
-                image.append(' ')
+            if pixel == "0":
+                image.append(" ")
                 break
-            if pixel == '1':
+            if pixel == "1":
                 image.append("M")
                 break
 
-    for i in range(0,len(image),width):
-        print(''.join(image[i:i+width]))
-
-
+    for i in range(0, len(image), width):
+        print("".join(image[i : i + width]))
 
 
 def get_digits(filename):
