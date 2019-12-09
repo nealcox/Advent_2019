@@ -1,0 +1,29 @@
+Day 1: The Tyranny of the Rocket Equation
+Given a set of modules, calculate the amount of fuel to transport all modules given formula for each module.
+Part b, also calculate fuel for the fuel,etc.
+
+Day 2: 1202 Program Alarm
+Start of Intcode Computer
+
+Day 3: Crossed Wires
+Given the paths of two wires in 2D, find crossing points, by closest  to joint origin (part a) and distance along paths (part b).
+
+Day 4: Secure Container
+Six digit password meeting constraints.
+
+Day 5: Sunny with a Chance of Asteroids
+Intcode Computer part 2
+
+Day 6: Universal Orbit Map
+Objects all orbit other objects. Calculate a tree representation and traverse it.
+
+Day 7: Amplification Circuit
+Intcode Computer part 3
+
+Day 8: Space Image Format
+Decode an image which has been encoded into 0s, 1s and 2s.
+
+Day 9: Sensor Boost
+Intcode Computer part 4
+
+
