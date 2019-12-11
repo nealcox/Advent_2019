@@ -26,4 +26,8 @@ Decode an image which has been encoded into 0s, 1s and 2s.
 Day 9: Sensor Boost
 Intcode Computer part 4
 
+Day 10 Monitoring Station:
+Count and destroy asteroids on a 2D plane.
 
+Day 11: Monitoring Station:
+Intcode Computer part 5
