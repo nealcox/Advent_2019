@@ -31,3 +31,7 @@ Count and destroy asteroids on a 2D plane.
 
 Day 11: Monitoring Station:
 Intcode Computer part 5
+
+Day 12: The N-Body Problem
+Calculate orbits for a four moon system
+
