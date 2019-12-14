@@ -37,3 +37,6 @@ Calculate orbits for a four moon system
 
 Day 13: Care Package
 Intcode Computer part 6
+
+Day 14: Space Stoichiometry
+Synthesising FUEL from ORE via other chemicals.
