@@ -124,7 +124,7 @@ class IntcodeMachine:
                 arg1 = self.get_arg(instruction, 1)
                 self.diagnostic_code = arg1
                 self.outputs.append(arg1)
-                print(arg1)
+                #print(arg1)
                 self.pc += 2
             elif opcode == jump_if_true:
                 arg1 = self.get_arg(instruction, 1)
