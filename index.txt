@@ -40,3 +40,10 @@ Intcode Computer part 6
 
 Day 14: Space Stoichiometry
 Synthesising FUEL from ORE via other chemicals.
+
+Day 15: Oxygen System
+Intcode Computer part 7
+
+Day 16: Flawed Frequency Transmission
+Flawed Frequency Ttransform
+
