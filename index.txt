@@ -47,3 +47,6 @@ Intcode Computer part 7
 Day 16: Flawed Frequency Transmission
 Flawed Frequency Ttransform
 
+Day 17: Set and Forget
+Intcode Computer part 8
+
