@@ -50,3 +50,6 @@ Flawed Frequency Ttransform
 Day 17: Set and Forget
 Intcode Computer part 8
 
+Day 18: Many-Worlds Interpretation
+Shortest paths in a system of tunnels
+

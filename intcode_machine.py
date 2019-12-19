@@ -1,5 +1,6 @@
 import sys
 from collections import defaultdict
+from copy import deepcopy
 
 
 class IntcodeMachine:
@@ -31,8 +32,14 @@ class IntcodeMachine:
         self.memory = self.memory_from_list(memory_l)
         self.memory_ = self.memory_from_list(memory_l)
 
-    def reload(self):
-        self.memory = self.memory_[:]
+    def reset(self):
+        self.memory = deepcopy(self.memory_)
+        self.pc = 0
+        self.inputs = []
+        self.outputs = []
+        self.state = "Not running"
+        self.diagnostic_code = None
+        self.relative_base = 0
 
     def get_arg(self, instruction, n):
         position_mode = 0
