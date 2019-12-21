@@ -13,7 +13,23 @@ def main():
         filename = "21-input.txt"
     machine = IntcodeMachine()
     machine.load_memory(filename)
-    program = "NOT J T\nOR J T\nAND A T\nAND B T\nAND C T\nNOT T J\nAND D J\nWALK\n"
+    
+    program = """NOT J T
+OR J T
+NOT T J
+OR I J
+OR F J
+AND E J 
+OR H J
+AND A T
+AND B T
+AND C T
+NOT T T
+AND T J
+AND D J
+RUN
+"""
+
     for c in program:
         machine.inputs.append(ord(c))
     result = machine.run_program()

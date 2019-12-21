@@ -1,0 +1,44 @@
+Part a
+======
+If a gap, jump if safe
+and( D, not(A and B and C))
+
+not J T
+or J T   # T is now True, J or (not J)
+and A T  # T = A
+and B T  # T = A and B
+and C T  # T = A and B and C ie True if no gap in first 3
+not T J  # J False if no gap in first 3, True if there is a gap
+and D J  # J is True if theres is a gap and can land
+
+"NOT J T\nOR J T\nAND A T\nAND B T\nAND C T\nNOT T J\nAND D J\nWALK\n"
+
+Part b
+======
+If a gap, jump if safe and can continue
+and( D, not(A and B and C))
+doesn't work for 
+#####.#.#...#####
+    @ABCDEFGHI
+as we jump over the first gap and can't continue
+so only jump if either next jump works so -> D -> H ie H True
+or we can move after the first jump so -> D->E->F or D->E->I ie E and then either F or I are True
+
+
+NOT J T
+OR J T   # T is now True, J or (not J)
+
+NOT T J  # J False
+OR I J  # J = I
+OR F J  # J = F or I
+AND E J  # J = E and (F or I) If we land on E, we can either walk on or jump
+
+OR H J   # J = H or (E and I)
+
+
+AND A T  # T = A
+AND B T  # T = A and B
+AND C T  # T = A and B and C ie True if no gap in first 3
+NOT T T  # T False if no gap in first 3, True if there is a gap
+AND T J
+AND D J  # J is True if theres is a gap and can land
