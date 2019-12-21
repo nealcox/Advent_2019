@@ -13,7 +13,7 @@ def main():
     machine.load_memory(filename)
     machine.memory[0] = 2
 
-    with open("directions.txt") as f:
+    with open("17-directions.txt") as f:
         directions = f.read()
     for c in directions:
         machine.inputs.append(ord(c))
