@@ -1,0 +1,57 @@
+south
+west
+take fuel cell
+west
+take easter egg
+east
+east
+east
+north
+east
+take ornament
+east
+take hologram
+east
+take dark matter
+north
+north
+east
+take klein bottle
+north
+take hypercube
+north
+west
+south
+south
+west
+south
+south
+west
+west
+west
+north
+north
+east
+east
+take cake
+west
+west
+south
+south
+east
+east
+east
+north
+north
+north
+east
+north
+north
+inv
+drop fuel cell
+drop easter egg
+drop ornament
+drop hologram
+drop klein bottle
+drop hypercube
+drop cake
